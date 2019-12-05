@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from ai_model.views import predict
+from ai_model.views import train
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('predict/', predict),
+    path('api/predict', predict),
+    path('api/train', train)
 ]
