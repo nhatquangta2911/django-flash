@@ -25,7 +25,7 @@ SECRET_KEY = 'kb@@a-14#g3co%%cecmdb34-)o3a*9&)mc$jvvixt@j)mgze(h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['54.169.200.131', 'model.shawnta.tech']
 
 
 # Application definition
