@@ -25,7 +25,7 @@ SECRET_KEY = 'kb@@a-14#g3co%%cecmdb34-)o3a*9&)mc$jvvixt@j)mgze(h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['54.169.200.131', 'model.shawnta.tech']
+ALLOWED_HOSTS = ['54.169.200.131', 'model.shawnta.tech', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'crud',
+    'corsheaders',
     'rest_framework',
     'ai_model'
 ]
@@ -45,12 +45,15 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'django_flash.urls'
 
