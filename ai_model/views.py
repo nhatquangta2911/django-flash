@@ -65,6 +65,6 @@ def train(request):
         eval_model = classifier.evaluate(X_train, y_train)
         joblib.dump(classifier, 'question_model.pkl')
         ending = datetime.datetime.now()
-        return Response({ "process_status": "done", "time(ms)": (ending - beginning) * 1000 })
+        return Response({ "process_status": "done", "duration": (ending - beginning) * 1000 })
     except ValueError as e:
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
