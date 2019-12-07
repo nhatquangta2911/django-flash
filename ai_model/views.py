@@ -21,6 +21,7 @@ from .serializers import ResultSerializers
 import pickle
 from sklearn.externals import joblib
 import json
+import datetime
 
 @api_view(["POST"])
 def predict(request):
@@ -39,6 +40,7 @@ def predict(request):
 @api_view(["POST"])
 def train(request):
     try:
+        beginning = datetime.datetime.now()
         df = pd.read_csv('dataset2.csv')
         df = df.dropna()
         df.isna().any()
@@ -53,16 +55,16 @@ def train(request):
         X = sc.fit_transform(X1)
         Counter(y)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
-        myData = request.data
         classifier = Sequential()
-        classifier.add(Dense(myData['layer1'], activation=myData['af1'], kernel_initializer='random_normal', input_dim=X_test.shape[1]))
-        classifier.add(Dense(myData['layer2'], activation=myData['af2'], kernel_initializer='random_normal'))
-        classifier.add(Dense(myData['layer3'], activation=myData['af3'], kernel_initializer='random_normal'))
+        classifier.add(Dense(request.data['node1'], activation=request.data['af1'], kernel_initializer='random_normal', input_dim=X_test.shape[1]))
+        classifier.add(Dense(request.data['node2'], activation=request.data['af2'], kernel_initializer='random_normal'))
+        classifier.add(Dense(request.data['node3'], activation=request.data['af3'], kernel_initializer='random_normal'))
         classifier.add(Dense(1, activation='sigmoid', kernel_initializer='random_normal'))
         classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        classifier.fit(X_train, y_train, batch_size=20, epochs=myData['epochs'])
+        classifier.fit(X_train, y_train, batch_size=20, epochs=request.data['epochs'])
         eval_model = classifier.evaluate(X_train, y_train)
         joblib.dump(classifier, 'question_model.pkl')
-        return JsonResponse(myData, safe=False)
+        ending = datetime.datetime.now()
+        return Response({ "process_status": "done", "time(ms)": (ending - beginning) * 1000 })
     except ValueError as e:
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
