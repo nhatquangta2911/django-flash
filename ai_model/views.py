@@ -62,11 +62,14 @@ def train(request):
         classifier.add(Dense(request.data['node3'], activation=request.data['af3'], kernel_initializer='random_normal'))
         classifier.add(Dense(1, activation='sigmoid', kernel_initializer='random_normal'))
         classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        classifier.fit(X_train, y_train, batch_size=20, epochs=request.data['epochs'])
+        history = classifier.fit(X_train, y_train, batch_size=20, epochs=request.data['epochs'])
+        history_dict = history.history
+        accuracy = history_dict['acc'][request.data['epochs'] - 1]
+        loss = history_dict['loss'][request.data['epochs'] -1]
         eval_model = classifier.evaluate(X_train, y_train)
         joblib.dump(classifier, 'question_model.pkl')
         ending = datetime.datetime.now()
         K.clear_session()
-        return Response({ "process_status": "done", "duration": (ending - beginning) * 1000 })
+        return Response({ "process_status": "done", "duration": (ending - beginning) * 1000, "accuracy": accuracy, "loss": loss})
     except ValueError as e:
-        return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
+        return Response(e.args[0], status.HTTP_400_BAD_REQUEST) 
