@@ -10,6 +10,7 @@ from collections import Counter
 warnings.filterwarnings('ignore')
 from keras import Sequential
 from keras.layers import Dense
+from keras import backend as K
 from rest_framework.decorators import api_view
 # from django.core import serializers
 from rest_framework.response import Response
@@ -65,6 +66,7 @@ def train(request):
         eval_model = classifier.evaluate(X_train, y_train)
         joblib.dump(classifier, 'question_model.pkl')
         ending = datetime.datetime.now()
+        K.clear_session()
         return Response({ "process_status": "done", "duration": (ending - beginning) * 1000 })
     except ValueError as e:
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
