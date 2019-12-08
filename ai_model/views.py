@@ -29,11 +29,11 @@ def predict(request):
         model = joblib.load("./question_model.pkl")
         mydata = request.data
         sc = MinMaxScaler()
-        w = np.array([[2, 4, 3, 5 ], [2, 4, 2, 2], [mydata['Question_Period'], mydata['Question_Type'], mydata['Question_Content_Type'], mydata['Job']]])
-        w = w.reshape(-3, 4)
+        w = np.array([[3, 4, 1, 1, 3, 3, 2, 2], [3, 4, 1, 1, 2, 2, 2, 1], [mydata['Question_Period'], mydata['Question_Type'], mydata['Question_Content_Type'], mydata['Gender'], mydata['Goal'], mydata['Activity_Level'], mydata['Body_Fat'], mydata['Job']]])
+        w = w.reshape(-3, 8)
         X_test = sc.fit_transform(w)
         y_pred = model.predict(X_test) 
-        return Response({ "result" : y_pred[2], "metadata": mydata, "w_after_reshape": w, "X_test": X_test })
+        return Response({ "result" : y_pred })
     except ValueError as e:
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
 
@@ -41,7 +41,7 @@ def predict(request):
 def train(request):
     try:
         beginning = datetime.datetime.now()
-        df = pd.read_csv('dataset2.csv')
+        df = pd.read_csv('new_dataset.csv')
         df = df.dropna()
         df.isna().any()
         Counter(df['Answer_Result'])
